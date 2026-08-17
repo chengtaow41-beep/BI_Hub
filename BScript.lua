@@ -100,6 +100,13 @@ end)
 -- ============================================
 -- 创建功能分类标签页
 -- ============================================
+local Tab_Notice = Window:Tab({ Title = "公告", Icon = "bell" })
+local Tab_Coop = Window:Tab({ Title = "服务器功能", Icon = "handshake" })
+local Tab_Player = Window:Tab({ Title = "玩家功能", Icon = "zap" })
+local Tab_General = Window:Tab({ Title = "常用功能", Icon = "info" })
+local Tab_ESP = Window:Tab({ Title = "透视", Icon = "eye" })
+local Tab_Visual = Window:Tab({ Title = "画质功能", Icon = "sun" })
+local Tab_Interact = Window:Tab({ Title = "飞行功能", Icon = "target" })
 
 
 

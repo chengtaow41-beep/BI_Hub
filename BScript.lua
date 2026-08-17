@@ -111,10 +111,58 @@ Tab_Utility:Button({
     Title = "通用飞行",
     Desc = "点击启用基础飞行",
     Callback = function()
-      local player = game.Players.LocalPlayer
-        local char = player.Character
-        if char and char:FindFirstChild("Humanoid") then
-            char.Humanoid.PlatformStand = true  -- 这里面就是飞行的核心代码
+    Callback = function()
+        local LocalPlayer = game:GetService("Players").LocalPlayer
+        local UserInputService = game:GetService("UserInputService")
+        local RunService = game:GetService("RunService")
+        
+        -- 如果已经飞了，就关掉；没飞就打开
+        if _G.FlyActive then
+            _G.FlyActive = false
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+                LocalPlayer.Character.Humanoid.PlatformStand = false
+                LocalPlayer.Character.Humanoid.UseJumpPower = true
+            end
+            WindUI:Notify({ Title = "BI脚本", Content = "飞行已关闭", Duration = 2 })
+            return
+        else
+            _G.FlyActive = true
+            WindUI:Notify({ Title = "BI脚本", Content = "飞行已开启！按 W/S 上升下降", Duration = 2 })
+        end
+
+        -- 核心飞行循环
+        local function FlyLoop()
+            local char = LocalPlayer.Character
+            if not char or not _G.FlyActive then return end
+            
+            local hum = char:FindFirstChild("Humanoid")
+            local root = char:FindFirstChild("HumanoidRootPart")
+            
+            if hum and root then
+                hum.PlatformStand = true
+                hum.UseJumpPower = false
+                
+                local moveDir = Vector3.new(0, 0, 0)
+                if UserInputService:IsKeyDown(Enum.KeyCode.W) then moveDir = moveDir + Vector3.new(0, 1, 0) end
+                if UserInputService:IsKeyDown(Enum.KeyCode.S) then moveDir = moveDir + Vector3.new(0, -1, 0) end
+                
+                root.Velocity = moveDir * 50 + (hum.MoveDirection * 80)
+                root.Velocity = Vector3.new(root.Velocity.X, moveDir.Y * 50, root.Velocity.Z)
+            end
+        end
+
+        -- 循环挂载到游戏刷新上
+        local connection
+        connection = RunService.Stepped:Connect(function()
+            if not _G.FlyActive then
+                connection:Disconnect()
+                return
+            end
+            FlyLoop()
+        end)
+    end
+})
+        -- 这里面就是飞行的核心代码
          -- 开启平台站立，类似飞行
             -- 如果你想找更完美的飞行代码，可以去搜 "Roblox Lua Fly script"
         end

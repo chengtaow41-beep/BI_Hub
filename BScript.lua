@@ -112,10 +112,198 @@ Tab_Utility:Button({
     Desc = "点击启用基础飞行",
     Callback = function()
         -- 这里面就是飞行的核心代码
-        local player = game.Players.LocalPlayer
-        local char = player.Character
-        if char and char:FindFirstChild("Humanoid") then
-            char.Humanoid.PlatformStand = true -- 开启平台站立，类似飞行
+        local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- 防止重复生成 GUI
+local oldGui = playerGui:FindFirstChild("NightFlyUI")
+if oldGui then
+        oldGui:Destroy()
+end
+
+-- =========================
+-- 配置区
+-- =========================
+
+local UI_NAME = "NightFlyUI"
+local TITLE_NAME = "夜脚本制作"
+local TITLE_OFF = "夜脚本制作 · 开启飞行"
+local TITLE_ON = "夜脚本制作 · 飞行中"
+
+-- 用户看到的速度：1, 2, 3, 4...
+local speed = 1
+local minSpeed = 1
+local maxSpeed = 80
+local speedStep = 1
+
+-- 每 1 点速度映射成多少真实速度
+-- 想更快就改大，比如 70 / 90 / 120
+local speedScale = 55
+
+local function getRealSpeed()
+        return speed * speedScale
+end
+
+-- =========================
+-- UI 工具函数
+-- =========================
+
+local function addCorner(obj, radius)
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, radius or 6)
+        corner.Parent = obj
+        return corner
+end
+
+local function addStroke(obj, color, thickness)
+        local stroke = Instance.new("UIStroke")
+        stroke.Color = color or Color3.fromRGB(120, 120, 255)
+        stroke.Thickness = thickness or 1
+        stroke.Parent = obj
+        return stroke
+end
+
+local function makeTextButton(parent, size, position, text)
+        local btn = Instance.new("TextButton")
+        btn.Size = size
+        btn.Position = position
+        btn.Text = text
+        btn.TextScaled = true
+        btn.Font = Enum.Font.GothamBold
+        btn.BackgroundColor3 = Color3.fromRGB(42, 42, 48)
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.AutoButtonColor = true
+        btn.Parent = parent
+
+        addCorner(btn, 6)
+
+        return btn
+end
+
+local function makeTextLabel(parent, size, position, text)
+        local label = Instance.new("TextLabel")
+        label.Size = size
+        label.Position = position
+        label.Text = text
+        label.TextScaled = false
+        label.TextSize = 15
+        label.Font = Enum.Font.Gotham
+        label.BackgroundTransparency = 1
+        label.TextColor3 = Color3.fromRGB(230, 230, 230)
+        label.TextXAlignment = Enum.TextXAlignment.Left
+        label.Parent = parent
+
+        return label
+end
+
+-- =========================
+-- 创建 UI
+-- =========================
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = UI_NAME
+screenGui.ResetOnSpawn = false
+screenGui.IgnoreGuiInset = false
+screenGui.Parent = playerGui
+
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 190, 0, 126)
+mainFrame.Position = UDim2.new(0, 10, 0, 10)
+mainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
+mainFrame.BackgroundTransparency = 0.12
+mainFrame.Active = true
+mainFrame.Parent = screenGui
+
+addCorner(mainFrame, 8)
+addStroke(mainFrame, Color3.fromRGB(100, 100, 170), 1)
+
+-- 顶部拖动栏
+local topBar = Instance.new("Frame")
+topBar.Size = UDim2.new(1, -8, 0, 28)
+topBar.Position = UDim2.new(0, 4, 0, 4)
+topBar.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+topBar.BackgroundTransparency = 0.05
+topBar.Active = true
+topBar.Parent = mainFrame
+
+addCorner(topBar, 6)
+
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, -38, 1, 0)
+titleLabel.Position = UDim2.new(0, 8, 0, 0)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = TITLE_NAME
+titleLabel.TextScaled = true
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.TextColor3 = Color3.fromRGB(235, 235, 255)
+titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+titleLabel.Parent = topBar
+
+local closeBtn = makeTextButton(
+        topBar,
+        UDim2.new(0, 26, 0, 22),
+        UDim2.new(1, -30, 0, 3),
+        "×"
+)
+closeBtn.BackgroundColor3 = Color3.fromRGB(95, 35, 45)
+closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local toggleBtn = makeTextButton(
+        mainFrame,
+        UDim2.new(0, 174, 0, 32),
+        UDim2.new(0, 8, 0, 38),
+        TITLE_OFF
+)
+addStroke(toggleBtn, Color3.fromRGB(120, 120, 255), 1.5)
+
+local speedLabel = makeTextLabel(
+        mainFrame,
+        UDim2.new(0, 174, 0, 20),
+        UDim2.new(0, 8, 0, 73),
+        ""
+)
+
+local minusBtn = makeTextButton(
+        mainFrame,
+        UDim2.new(0, 34, 0, 26),
+        UDim2.new(0, 8, 0, 95),
+        "-"
+)
+
+local plusBtn = makeTextButton(
+        mainFrame,
+        UDim2.new(0, 34, 0, 26),
+        UDim2.new(0, 148, 0, 95),
+        "+"
+)
+
+local speedHint = Instance.new("TextLabel")
+speedHint.Size = UDim2.new(0, 100, 0, 26)
+speedHint.Position = UDim2.new(0, 45, 0, 95)
+speedHint.BackgroundTransparency = 1
+speedHint.Text = "速度"
+speedHint.TextScaled = true
+speedHint.Font = Enum.Font.GothamBold
+speedHint.TextColor3 = Color3.fromRGB(210, 210, 210)
+speedHint.Parent = mainFrame
+
+local function refreshSpeedLabel()
+        speedLabel.Text = string.format("速度：%d  |  实速：%d", speed, getRealSpeed())
+end
+
+refreshSpeedLabel()
+
+-- =========================
+-- 拖动功能
+-- =========================
+
+local dragging = false
+local dragStart = nil
+local star -- 开启平台站立，类似飞行
             -- 如果你想找更完美的飞行代码，可以去搜 "Roblox Lua Fly script"
         end
     end

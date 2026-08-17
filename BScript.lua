@@ -110,56 +110,78 @@ local Tab_Utility = Window:Tab({
 Tab_Utility:Button({
     Title = "通用飞行",
     Desc = "点击启用基础飞行",
+    -- ==========================================
+-- 将这段话放入你的 BI脚本 UI 分类中
+-- ==========================================
+local MainFly = Window:Tab({
+    Title = "完美飞行",
+    Icon = "plane"
+})
+
+local isFlying = false
+local flyConnection = nil
+local flySpeed = 20 -- 基础飞行速度
+
+MainFly:Button({
+    Title = "切换 飞行/降落",
     Callback = function()
-    Callback = function()
-        local LocalPlayer = game:GetService("Players").LocalPlayer
-        local UserInputService = game:GetService("UserInputService")
-        local RunService = game:GetService("RunService")
+        isFlying = not isFlying
         
-        -- 如果已经飞了，就关掉；没飞就打开
-        if _G.FlyActive then
-            _G.FlyActive = false
-            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-                LocalPlayer.Character.Humanoid.PlatformStand = false
-                LocalPlayer.Character.Humanoid.UseJumpPower = true
+        local player = game.Players.LocalPlayer
+        local char = player.Character
+        local hum = char and char:FindFirstChildWhichIsA("Humanoid")
+        
+        if not isFlying then
+            -- 如果关闭飞行
+            if flyConnection then flyConnection:Disconnect(); flyConnection = nil end
+            if hum then
+                hum.PlatformStand = false
+                hum:SetStateEnabled(Enum.HumanoidStateType.PlatformStanding, true)
+                if char:FindFirstChild("Animate") then char.Animate.Disabled = false end
             end
-            WindUI:Notify({ Title = "BI脚本", Content = "飞行已关闭", Duration = 2 })
+            WindUI:Notify({ Title = "BI脚本", Content = "已降落 / 飞行关闭", Duration = 2 })
             return
-        else
-            _G.FlyActive = true
-            WindUI:Notify({ Title = "BI脚本", Content = "飞行已开启！按 W/S 上升下降", Duration = 2 })
         end
-
-        -- 核心飞行循环
-        local function FlyLoop()
-            local char = LocalPlayer.Character
-            if not char or not _G.FlyActive then return end
+        
+        WindUI:Notify({ Title = "BI脚本", Content = "飞行开启！W上升 / S下降", Duration = 3 })
+        
+        -- 核心循环：让玩家无视重力
+        flyConnection = game:GetService("RunService").Stepped:Connect(function()
+            if not isFlying then return end
             
-            local hum = char:FindFirstChild("Humanoid")
-            local root = char:FindFirstChild("HumanoidRootPart")
+            local char = player.Character
+            if not char or not char:FindFirstChild("HumanoidRootPart") then return end
             
-            if hum and root then
-                hum.PlatformStand = true
-                hum.UseJumpPower = false
-                
-                local moveDir = Vector3.new(0, 0, 0)
-                if UserInputService:IsKeyDown(Enum.KeyCode.W) then moveDir = moveDir + Vector3.new(0, 1, 0) end
-                if UserInputService:IsKeyDown(Enum.KeyCode.S) then moveDir = moveDir + Vector3.new(0, -1, 0) end
-                
-                root.Velocity = moveDir * 50 + (hum.MoveDirection * 80)
-                root.Velocity = Vector3.new(root.Velocity.X, moveDir.Y * 50, root.Velocity.Z)
-            end
-        end
-
-        -- 循环挂载到游戏刷新上
-        local connection
-        connection = RunService.Stepped:Connect(function()
-            if not _G.FlyActive then
-                connection:Disconnect()
-                return
-            end
-            FlyLoop()
+            local root = char.HumanoidRootPart
+            local hum = char:FindFirstChildWhichIsA("Humanoid")
+            if not hum then return end
+            
+            -- 强制开启平台站立（核心飞行姿势）
+            hum.PlatformStand = true
+            hum:SetStateEnabled(Enum.HumanoidStateType.PlatformStanding, false)
+            if char:FindFirstChild("Animate") then char.Animate.Disabled = true end
+            
+            -- 读取键盘输入控制速度
+            local moveDir = Vector3.new(0, 0, 0)
+            if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.W) then moveDir = moveDir + Vector3.new(0, 1, 0) end
+            if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.S) then moveDir = moveDir + Vector3.new(0, -1, 0) end
+            if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.A) then moveDir = moveDir + Vector3.new(-1, 0, 0) end
+            if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.D) then moveDir = moveDir + Vector3.new(1, 0, 0) end
+            
+            -- 应用力到身体上
+            root.Velocity = Vector3.new(moveDir.X * 50, moveDir.Y * 35, moveDir.Z * 50)
         end)
+    end
+})
+
+-- 增加一个调节速度的滑块（给你做的高级元素）
+MainFly:Slider({
+    Title = "飞行速度调节",
+    Value = { Min = 10, Max = 100, Default = 50 },
+    Increment = 5,
+    Callback = function(val)
+        flySpeed = val
+        WindUI:Notify({ Title = "BI脚本", Content = "飞行速度调整至: "..val, Duration = 1 })
     end
 })
         -- 这里面就是飞行的核心代码

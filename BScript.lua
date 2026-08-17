@@ -98,8 +98,42 @@ task.spawn(function()
 end)
 
 -- ============================================
--- 无分类 Tab，窗口留空待填
+-- 创建功能分类标签页
 -- ============================================
+local Tab_Player = Window:Tab({
+    Title = "玩家功能",
+    Icon = "user"
+})
+
+-- 添加一个按钮
+Tab_Player:Button({
+    Title = "回满血量",
+    Desc = "点击立刻恢复满血",
+    Callback = function()
+        local char = game.Players.LocalPlayer.Character
+        if char and char:FindFirstChild("Humanoid") then
+            char.Humanoid.Health = char.Humanoid.MaxHealth
+            WindUI:Notify({
+                Title = "B脚本",
+                Content = "血量已恢复！",
+                Duration = 2,
+                Icon = "heart"
+            })
+        end
+    end
+})
+
+-- 添加一个开关 (比如无限跳跃)
+Tab_Player:Toggle({
+    Title = "无限跳跃",
+    Value = false,
+    Callback = function(state)
+        if state then
+            loadstring(game:HttpGet("https://pastebin.com/raw/V5PQy3y0", true))()
+        end
+    end
+})
+
 
 -- ============================================
 -- Anti-AFK
@@ -114,5 +148,6 @@ end)
 -- 暴露全局
 _G._LCF_WindUI = WindUI
 _G._LCF_TmplWin = Window
+
 
 print("[" .. BRAND.name .. "] UI 纯净模板已加载 ✅")

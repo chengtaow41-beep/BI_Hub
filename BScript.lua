@@ -152,6 +152,11 @@ for i, data in ipairs(Tabs) do
 
     yPos = yPos + 45
 end
+--默认选中
+TabButtons[1].TextColor3 = Color3.fromRGB(255, 255, 255)
+TabButtons[1].BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+TabButtons[1].BackgroundTransparency = 0.2
+TabPages[1].Visible = true
 
 
 -- ============================================

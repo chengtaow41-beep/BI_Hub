@@ -107,7 +107,7 @@ local Tab_Player = Window:Tab({
 
 -- 添加一个按钮
 Tab_Player:Button({
-    Title = "回满血量",
+    Title = "超级回血",
     Desc = "点击立刻恢复满血",
     Callback = function()
         local char = game.Players.LocalPlayer.Character
@@ -126,6 +126,45 @@ Tab_Player:Button({
 -- 添加一个开关 (比如无限跳跃)
 Tab_Player:Toggle({
     Title = "无限跳跃",
+    Value = false,
+    Callback = function(state)
+        if state then
+            loadstring(game:HttpGet("https://pastebin.com/raw/V5PQy3y0", true))()
+        end
+    end
+})
+-- ==========================================
+-- 自己添加功能分类
+-- ==========================================
+
+-- 1. 添加一个分类叫“玩家功能”
+local Tab_Player = Window:Tab({
+    Title = "玩家功能",
+    Icon = "user"
+})
+
+-- 2. 在这个分类下，加个“回血”按钮
+Tab_Player:Button({
+    Title = "立刻回满血",
+    Desc = "点击回复 100% 血量",
+    Callback = function()
+        local char = game.Players.LocalPlayer.Character
+        if char and char:FindFirstChild("Humanoid") then
+            char.Humanoid.Health = char.Humanoid.MaxHealth
+            WindUI:Notify({ Title = "B脚本", Content = "血量已拉满！", Duration = 2 })
+        end
+    end
+})
+
+-- 3. 添加一个分类叫“通用功能”
+local Tab_Utility = Window:Tab({
+    Title = "常用功能",
+    Icon = "settings"
+})
+
+-- 4. 在这个分类下，加个“无限跳跃”开关
+Tab_Utility:Toggle({
+    Title = "无限跳跃开关",
     Value = false,
     Callback = function(state)
         if state then

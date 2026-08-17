@@ -11,9 +11,9 @@ WindUI.TransparencyValue = 0.15
 
 -- 3. 弹窗确认 (像你代码里一样，加个渐变弹出窗)
 WindUI:Popup({
-    Title = "BI 脚本",
+    Title = "B 脚本",
     Icon = "sparkles",
-    Content = "欢迎使用 BI 脚本\n永久免费！永不跑路！",
+    Content = "欢迎使用 B 脚本\n永久免费！永不跑路！",
     Buttons = {
         { Title = "进入菜单", Icon = "arrow-right", Variant = "Primary", Callback = function() end }
     }

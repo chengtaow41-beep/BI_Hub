@@ -4,10 +4,10 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 -- 品牌配置（改这 4 行就行）
 -- ============================================
 local BRAND = {
-    name    = "Lucky脚本",
+    name    = "BI脚本",
     version = "v1.0",
-    author  = "Lucky",
-    folder  = "LuckyHub",
+    author  = "BI",
+    folder  = "BIHub",
     icon    = "zap",
     theme   = "Dark",
     accent  = "#FF6B35",

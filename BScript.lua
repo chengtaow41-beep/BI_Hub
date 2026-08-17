@@ -303,7 +303,186 @@ refreshSpeedLabel()
 
 local dragging = false
 local dragStart = nil
-local star -- 开启平台站立，类似飞行
+local startPos = nil
+local dragInput = nil
+
+local function updateDrag(input)
+        local delta = input.Position - dragStart
+
+        mainFrame.Position = UDim2.new(
+                startPos.X.Scale,
+                startPos.X.Offset + delta.X,
+                startPos.Y.Scale,
+                startPos.Y.Offset + delta.Y
+        )
+end
+
+topBar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+                or input.UserInputType == Enum.UserInputType.Touch then
+
+                dragging = true
+                dragStart = input.Position
+                startPos = mainFrame.Position
+
+                input.Changed:Connect(function()
+                        if input.UserInputState == Enum.UserInputState.End
+                                or input.UserInputState == Enum.UserInputState.Cancel then
+                                dragging = false
+                        end
+                end)
+        end
+end)
+
+topBar.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement
+                or input.UserInputType == Enum.UserInputType.Touch then
+                dragInput = input
+        end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+        if dragging and input == dragInput then
+                updateDrag(input)
+        end
+end)
+
+-- =========================
+-- 飞行状态
+-- =========================
+
+local flying = false
+local bv = nil
+local bg = nil
+local renderConn = nil
+local charRemovingConn = nil
+
+local currentHumanoid = nil
+local currentChar = nil
+local oldPlatformStand = nil
+local oldAutoRotate = nil
+
+local function setButtonState(isFlying)
+        if isFlying then
+                toggleBtn.Text = TITLE_ON
+                toggleBtn.BackgroundColor3 = Color3.fromRGB(50, 75, 55)
+        else
+                toggleBtn.Text = TITLE_OFF
+                toggleBtn.BackgroundColor3 = Color3.fromRGB(42, 42, 48)
+        end
+end
+
+local function disconnectRender()
+        if renderConn then
+                renderConn:Disconnect()
+                renderConn = nil
+        end
+end
+
+local function disconnectCharacterRemoving()
+        if charRemovingConn then
+                charRemovingConn:Disconnect()
+                charRemovingConn = nil
+        end
+end
+
+local function destroyFlightObjects(char)
+        if bv then
+                bv:Destroy()
+                bv = nil
+        end
+
+        if bg then
+                bg:Destroy()
+                bg = nil
+        end
+
+        if char then
+                local hrp = char:FindFirstChild("HumanoidRootPart")
+                if hrp then
+                        for _, obj in ipairs(hrp:GetChildren()) do
+                                if obj.Name == "NightFly_BV" or obj.Name == "NightFly_BG" then
+                                        obj:Destroy()
+                                end
+                        end
+                end
+        end
+end
+
+local function restoreHumanoidState()
+        if currentHumanoid and currentHumanoid.Parent then
+                if oldPlatformStand ~= nil then
+                        currentHumanoid.PlatformStand = oldPlatformStand
+                else
+                        currentHumanoid.PlatformStand = false
+                end
+
+                if oldAutoRotate ~= nil then
+                        currentHumanoid.AutoRotate = oldAutoRotate
+                else
+                        currentHumanoid.AutoRotate = true
+                end
+        end
+
+        currentHumanoid = nil
+        oldPlatformStand = nil
+        oldAutoRotate = nil
+end
+
+local function createFlightObjects(hrp)
+        local newBV = Instance.new("BodyVelocity")
+        newBV.Name = "NightFly_BV"
+        newBV.MaxForce = Vector3.new(1e6, 1e6, 1e6)
+        newBV.P = 12000
+        newBV.Velocity = Vector3.zero
+        newBV.Parent = hrp
+
+        local newBG = Instance.new("BodyGyro")
+        newBG.Name = "NightFly_BG"
+        newBG.MaxTorque = Vector3.new(1e6, 1e6, 1e6)
+        newBG.P = 12000
+        newBG.D = 500
+        newBG.CFrame = hrp.CFrame
+        newBG.Parent = hrp
+
+        return newBV, newBG
+end
+
+local stopFlying
+
+local function startFlying()
+        if flying then
+                return
+        end
+
+        local char = player.Character or player.CharacterAdded:Wait()
+        local humanoid = char:FindFirstChildOfClass("Humanoid")
+        local hrp = char:FindFirstChild("HumanoidRootPart")
+
+        if not humanoid or not hrp then
+                return
+        end
+
+        if humanoid.Health <= 0 then
+                return
+        end
+
+        -- VIP 检查可以插这里
+        -- if not isPlayerVIP(player) then
+        --         return
+        -- end
+
+        destroyFlightObjects(char)
+        disconnectRender()
+        disconnectCharacterRemoving()
+
+        currentChar = char
+        currentHumanoid = humanoid
+        oldPlatformStand = humanoid.PlatformStand
+        oldAutoRotate = humanoid.AutoRotate
+
+        humanoid.PlatformStand = true
+        humanoid.A -- 开启平台站立，类似飞行
             -- 如果你想找更完美的飞行代码，可以去搜 "Roblox Lua Fly script"
         end
     end

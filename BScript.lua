@@ -100,64 +100,25 @@ end)
 -- ============================================
 -- 创建功能分类标签页
 -- ============================================
-local Tabs = {
-    {Name = " 公告", Icon = ""},
-    {Name = " 服务器功能", Icon = ""},
-    {Name = " 修改配置", Icon = ""},
-    {Name = " 通用", Icon = ""},
-    {Name = " 自瞄功能", Icon = ""},
-    {Name = " 画质功能", Icon = ""},
-    {Name = " 动作功能", Icon = ""}
-}
-
-local TabButtons = {}
-local TabPages = {}
-
-local yPos = 5
-for i, data in ipairs(Tabs) do
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, 0, 0, 40)
-    btn.Position = UDim2.new(0, 0, 0, yPos)
-    btn.BackgroundTransparency = 1
-    btn.Text = "  " .. data.Name
-    btn.TextColor3 = Color3.fromRGB(160, 160, 160)
-    btn.Font = Enum.Font.Gotham
-    btn.TextSize = 13
-    btn.TextXAlignment = Enum.TextXAlignment.Left
-    btn.Parent = Sidebar
-
-    local page = Instance.new("Frame")
-    page.Size = UDim2.new(1, -5, 1, -5)
-    page.Position = UDim2.new(0, 2.5, 0, 2.5)
-    page.BackgroundTransparency = 1
-    page.Visible = false
-    page.Parent = ContentArea
-
-    table.insert(TabButtons, btn)
-    table.insert(TabPages, page)
-
-    btn.MouseButton1Click:Connect(function()
-        for _, b in ipairs(TabButtons) do
-            b.TextColor3 = Color3.fromRGB(160, 160, 160)
-            b.BackgroundTransparency = 1
-        end
-        for _, p in ipairs(TabPages) do
-            p.Visible = false
-        end
-        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-        btn.BackgroundTransparency = 0.2
-        page.Visible = true
-    end)
-
-    yPos = yPos + 45
-end
---默认选中
-TabButtons[1].TextColor3 = Color3.fromRGB(255, 255, 255)
-TabButtons[1].BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-TabButtons[1].BackgroundTransparency = 0.2
-TabPages[1].Visible = true
-
+local Tab_Notice = Window:Tab({ Title = "公告", Icon = "bell" })
+--公告
+Tab_Notice:Paragraph({
+    Title = "BI 脚本",
+    Desc = "永久免费！永不跑路！\n交流群：1081045774",
+    Image = "https://c-ssl.duitang.com/uploads/blog/202310/21/oVS4gnBVIg4A1yJ.jpg"
+})
+Tab_Notice:Button({
+    Title = "复制群号",
+    Desc = "点击复制QQ群号",
+    Callback = function()
+        setclipboard("待定")
+        Window:Notify({
+            Title = "BI 脚本",
+            Content = "群号 待定 已复制到剪贴板！",
+            Duration = 3
+        })
+    end
+})
 
 -- ============================================
 -- Anti-AFK

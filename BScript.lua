@@ -101,13 +101,13 @@ end)
 -- 创建功能分类标签页
 -- ============================================
 local Tabs = {
-    {Name = "📢 公告", Icon = ""},
-    {Name = "🤝 合作脚本", Icon = ""},
-    {Name = "⚡ 玩家功能", Icon = ""},
-    {Name = "ℹ️ 通用", Icon = ""},
-    {Name = "👁️ 透视功能", Icon = ""},
-    {Name = "🌙 视觉功能", Icon = ""},
-    {Name = "🎯 互动功能", Icon = ""}
+    {Name = " 公告", Icon = ""},
+    {Name = " 服务器功能", Icon = ""},
+    {Name = " 修改配置", Icon = ""},
+    {Name = " 通用", Icon = ""},
+    {Name = " 自瞄功能", Icon = ""},
+    {Name = " 画质功能", Icon = ""},
+    {Name = " 动作功能", Icon = ""}
 }
 
 local TabButtons = {}

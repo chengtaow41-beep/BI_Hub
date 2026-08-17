@@ -107,7 +107,17 @@ local Tab_Utility = Window:Tab({
 })
 
 -- 添加第一个功能：通用飞行
-
+-- 在你的按钮回调里这么写
+Tab_Player:Button({
+    Title = "启动飞行 (外部调用)",
+    Callback = function()
+        -- 1. 动态加载 Github 上的 fly.lua 文件
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/chengtaow41-beep/BI_Hub/main/fly.lua"))()
+        
+        -- 2. 调用飞行切换函数
+        _G.FlyToggle()
+    end
+})
     -- 
         -- 这里面就是飞行的核心代码
          -- 开启平台站立，类似飞行

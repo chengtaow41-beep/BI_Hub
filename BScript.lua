@@ -100,14 +100,58 @@ end)
 -- ============================================
 -- 创建功能分类标签页
 -- ============================================
-local Tab_Notice = Window:Tab({ Title = "公告", Icon = "bell" })
-local Tab_Coop = Window:Tab({ Title = "服务器功能", Icon = "handshake" })
-local Tab_Player = Window:Tab({ Title = "玩家功能", Icon = "zap" })
-local Tab_General = Window:Tab({ Title = "常用功能", Icon = "info" })
-local Tab_ESP = Window:Tab({ Title = "透视", Icon = "eye" })
-local Tab_Visual = Window:Tab({ Title = "画质功能", Icon = "sun" })
-local Tab_Interact = Window:Tab({ Title = "飞行功能", Icon = "target" })
+local Tabs = {
+    {Name = "📢 公告", Icon = ""},
+    {Name = "🤝 合作脚本", Icon = ""},
+    {Name = "⚡ 玩家功能", Icon = ""},
+    {Name = "ℹ️ 通用", Icon = ""},
+    {Name = "👁️ 透视功能", Icon = ""},
+    {Name = "🌙 视觉功能", Icon = ""},
+    {Name = "🎯 互动功能", Icon = ""}
+}
 
+local TabButtons = {}
+local TabPages = {}
+
+local yPos = 5
+for i, data in ipairs(Tabs) do
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, 0, 0, 40)
+    btn.Position = UDim2.new(0, 0, 0, yPos)
+    btn.BackgroundTransparency = 1
+    btn.Text = "  " .. data.Name
+    btn.TextColor3 = Color3.fromRGB(160, 160, 160)
+    btn.Font = Enum.Font.Gotham
+    btn.TextSize = 13
+    btn.TextXAlignment = Enum.TextXAlignment.Left
+    btn.Parent = Sidebar
+
+    local page = Instance.new("Frame")
+    page.Size = UDim2.new(1, -5, 1, -5)
+    page.Position = UDim2.new(0, 2.5, 0, 2.5)
+    page.BackgroundTransparency = 1
+    page.Visible = false
+    page.Parent = ContentArea
+
+    table.insert(TabButtons, btn)
+    table.insert(TabPages, page)
+
+    btn.MouseButton1Click:Connect(function()
+        for _, b in ipairs(TabButtons) do
+            b.TextColor3 = Color3.fromRGB(160, 160, 160)
+            b.BackgroundTransparency = 1
+        end
+        for _, p in ipairs(TabPages) do
+            p.Visible = false
+        end
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        btn.BackgroundTransparency = 0.2
+        page.Visible = true
+    end)
+
+    yPos = yPos + 45
+end
 
 
 -- ============================================

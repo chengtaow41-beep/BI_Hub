@@ -482,7 +482,139 @@ local function startFlying()
         oldAutoRotate = humanoid.AutoRotate
 
         humanoid.PlatformStand = true
-        humanoid.A -- 开启平台站立，类似飞行
+        humanoid.AutoRotate = false
+
+        bv, bg = createFlightObjects(hrp)
+
+        flying = true
+        setButtonState(true)
+
+        renderConn = RunService.RenderStepped:Connect(function()
+                if not flying then
+                        return
+                end
+
+                if not char.Parent or not humanoid.Parent or not hrp.Parent then
+                        stopFlying()
+                        return
+                end
+
+                if humanoid.Health <= 0 then
+                        stopFlying()
+                        return
+                end
+
+                local cam = workspace.CurrentCamera
+                if not cam then
+                        return
+                end
+
+                local moveDir = humanoid.MoveDirection
+
+                local camForwardH = Vector3.new(cam.CFrame.LookVector.X, 0, cam.CFrame.LookVector.Z)
+                if camForwardH.Magnitude < 0.001 then
+                        camForwardH = Vector3.new(0, 0, -1)
+                else
+                        camForwardH = camForwardH.Unit
+                end
+
+                local camRightH = Vector3.new(cam.CFrame.RightVector.X, 0, cam.CFrame.RightVector.Z)
+                if camRightH.Magnitude < 0.001 then
+                        camRightH = Vector3.new(1, 0, 0)
+                else
+                        camRightH = camRightH.Unit
+                end
+
+                local inputX = moveDir:Dot(camRightH)
+                local inputZ = moveDir:Dot(camForwardH)
+
+                local finalDir = cam.CFrame.RightVector * inputX + cam.CFrame.LookVector * inputZ
+                local finalVelocity = Vector3.zero
+
+                if finalDir.Magnitude > 0.001 then
+                        finalVelocity = finalDir.Unit * getRealSpeed()
+                end
+
+                if bv and bv.Parent then
+                        bv.Velocity = finalVelocity
+                end
+
+                if bg and bg.Parent then
+                        bg.CFrame = CFrame.new(hrp.Position, hrp.Position + cam.CFrame.LookVector)
+                end
+        end)
+
+        charRemovingConn = player.CharacterRemoving:Connect(function()
+                destroyFlightObjects(char)
+                disconnectRender()
+                disconnectCharacterRemoving()
+                restoreHumanoidState()
+
+                flying = false
+                currentChar = nil
+                setButtonState(false)
+        end)
+end
+
+stopFlying = function()
+        if not flying then
+                return
+        end
+
+        local char = currentChar or player.Character
+
+        destroyFlightObjects(char)
+        disconnectRender()
+        disconnectCharacterRemoving()
+        restoreHumanoidState()
+
+        flying = false
+        currentChar = nil
+        setButtonState(false)
+end
+
+-- =========================
+-- UI 事件
+-- =========================
+
+toggleBtn.MouseButton1Click:Connect(function()
+        if flying then
+                stopFlying()
+        else
+                startFlying()
+        end
+end)
+
+minusBtn.MouseButton1Click:Connect(function()
+        speed = math.max(minSpeed, speed - speedStep)
+        refreshSpeedLabel()
+end)
+
+plusBtn.MouseButton1Click:Connect(function()
+        speed = math.min(maxSpeed, speed + speedStep)
+        refreshSpeedLabel()
+end)
+
+closeBtn.MouseButton1Click:Connect(function()
+        stopFlying()
+        screenGui:Destroy()
+end)
+
+-- GUI 被删除时自动清理
+screenGui.AncestryChanged:Connect(function(_, parent)
+        if not parent then
+                stopFlying()
+        end
+end)
+
+-- 重生后默认关闭飞行
+player.CharacterAdded:Connect(function()
+        if flying then
+                stopFlying()
+        end
+
+        setButtonState(false)
+end) -- 开启平台站立，类似飞行
             -- 如果你想找更完美的飞行代码，可以去搜 "Roblox Lua Fly script"
         end
     end

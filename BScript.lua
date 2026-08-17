@@ -5,9 +5,9 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 -- ============================================
 local BRAND = {
     name    = "BI脚本",
-    version = "v1.0",
+    version = "v1.0_作者快手:5570888954",
     author  = "BI",
-    folder  = "BIHub",
+    folder  = "B_Hub",
     icon    = "zap",
     theme   = "Dark",
     accent  = "#FF6B35",

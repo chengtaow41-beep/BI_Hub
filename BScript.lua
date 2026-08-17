@@ -100,26 +100,30 @@ end)
 -- ============================================
 -- 创建功能分类标签页
 -- ============================================
-local Tab_Notice = Window:Tab({ Title = "公告", Icon = "bell" })
---公告
+local Tab_Notice = Window:Tab({
+    Title = "公告", 
+    Icon = "bell" -- 这个图标会自动渲染在文字左边
+})
+
+-- 填入公告页的内容
 Tab_Notice:Paragraph({
-    Title = "BI 脚本",
+    Title = "BI脚本",
     Desc = "永久免费！永不跑路！\n交流群：1081045774",
     Image = "https://c-ssl.duitang.com/uploads/blog/202310/21/oVS4gnBVIg4A1yJ.jpg"
 })
+
 Tab_Notice:Button({
-    Title = "复制群号",
-    Desc = "点击复制QQ群号",
+    Title = "复制QQ群",
+    Desc = "点击复制主群号码",
     Callback = function()
-        setclipboard("待定")
+        setclipboard("1081045774")
         Window:Notify({
-            Title = "BI 脚本",
-            Content = "群号 待定 已复制到剪贴板！",
+            Title = "BI脚本",
+            Content = "群号 1081045774 已复制到剪贴板！",
             Duration = 3
         })
     end
 })
-
 -- ============================================
 -- Anti-AFK
 -- ============================================

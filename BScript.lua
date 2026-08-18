@@ -104,7 +104,7 @@ local MainTab = Window:Tab({
      Title = "公告",
      Icon = "megaphone"
  })
-AnnounceTab:Section({
+MainTab:Section({
      Title = "风脚本",
      Desc = "永久免费\n公益脚本禁止倒卖，认准风脚本"
  })

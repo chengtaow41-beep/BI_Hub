@@ -102,7 +102,7 @@ end)
 -- ===================================
 local MainTab = Window:Tab({
      Title = "公告",
-     Icon = "home"
+     Icon = "megaphone"
  })
  local MiscTab = Window:Tab({
      Title = "通用",

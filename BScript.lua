@@ -104,14 +104,25 @@ local AnnounceTab = Window:Tab({
     Title = "公告",
     Icon = "megaphone"
 })
+AnnounceTab:Button({
+     Title = "风脚本主群",
+     Desc = "待定",
+     Callback = function()
+         setclipboard("114514")
+         WindUI:Notify({
+             Title = "已复制KS群号",
+             Content = "直接粘贴即可加群",
+             Duration = 2
+         })
+     end
 AnnounceTab:Section({
     Title = "风脚本",
     Desc = "永久免费\n公益脚本禁止倒卖，认准风脚本"
 })
-AnnounceTab:Button({
+AnnounceTab:Section({
      Title = "风脚本 v1.0.0.0 更新",
-     Desc = "完成UI基础框架，自动防挂机，公告页面",
-     Callback = function() end
+     Desc = "完成UI基础框架，自动防挂机，公告页面"
+     
 })
  local MiscTab = Window:Tab({
      Title = "通用",

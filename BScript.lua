@@ -100,7 +100,62 @@ end)
 --
 -- 创建功能分类标签页
 -- 
+local Tab_Disaster = Window:Tab({
+    Title = "自然灾害",
+    Icon = "zap"
+})
 
+-- 2. 在右侧添加功能按钮：开启无敌
+Tab_Disaster:Button({
+    Title = "开启无敌模式",
+    Desc = "无视所有灾难伤害",
+    Callback = function()
+        local char = game.Players.LocalPlayer.Character
+        if char and char:FindFirstChild("Humanoid") then
+            char.Humanoid.MaxHealth = math.huge
+            char.Humanoid.Health = math.huge
+            WindUI:Notify({
+                Title = "BI脚本",
+                Content = "无敌模式已开启！",
+                Duration = 2
+            })
+        end
+    end
+})
+
+-- 3. 添加功能按钮：传送高空
+Tab_Disaster:Button({
+    Title = "紧急传送高空",
+    Desc = "避开地震和海啸",
+    Callback = function()
+        local char = game.Players.LocalPlayer.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            char.HumanoidRootPart.CFrame = CFrame.new(0, 300, 0)
+            WindUI:Notify({
+                Title = "BI脚本",
+                Content = "已传送至安全高空！",
+                Duration = 2
+            })
+        end
+    end
+})
+
+-- 4. 添加功能按钮：瞬间回血
+Tab_Disaster:Button({
+    Title = "瞬间回满血量",
+    Desc = "立刻补满生命值",
+    Callback = function()
+        local char = game.Players.LocalPlayer.Character
+        if char and char:FindFirstChild("Humanoid") then
+            char.Humanoid.Health = char.Humanoid.MaxHealth
+            WindUI:Notify({
+                Title = "BI脚本",
+                Content = "血量已回满！",
+                Duration = 2
+            })
+        end
+    end
+})
 -- Anti-AFK
 -- ============================================
 local VirtualUser = game:GetService("VirtualUser")

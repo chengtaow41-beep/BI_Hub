@@ -104,23 +104,9 @@ local MainTab = Window:Tab({
      Title = "公告",
      Icon = "megaphone"
  })
--- 大标题卡片
- InfoTab:Section({
+AnnounceTab:Section({
      Title = "风脚本",
-     Desc = "兄弟们，这个脚本是免费的，有倒卖的在抖音群说一下！"
- })
- -- QQ群卡片，点击复制群号
- InfoTab:Button({
-     Title = "风脚本主群",
-     Desc = "待定",
-     Callback = function()
-         setclipboard("群号待定")
-         WindUI:Notify({
-             Title = "待定",
-             Content = "粘贴即可去加群",
-             Duration = 2
-         })
-     end
+     Desc = "永久免费\n公益脚本禁止倒卖，认准风脚本"
  })
  local MiscTab = Window:Tab({
      Title = "通用",

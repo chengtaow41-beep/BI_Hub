@@ -10,7 +10,7 @@ local BRAND = {
     folder  = "B_Hub",
     icon    = "zap",
     theme   = "Dark",
-    accent  = "#0xFFAC9B00",
+    accent  = "#FFAC9B",
 }
 
 -- ============================================

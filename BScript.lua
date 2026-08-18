@@ -100,61 +100,53 @@ end)
 --
 -- 创建功能分类标签页
 -- 
-local Tab_Disaster = Window:Tab({
-    Title = "自然灾害",
-    Icon = "zap"
-})
+-- 1. 创建分类：玩家功能
+local Tab_Function = Window:Tab({ Title = "玩家功能", Icon = "zap" })
 
--- 2. 在右侧添加功能按钮：开启无敌
-Tab_Disaster:Button({
-    Title = "开启无敌模式",
+-- 2. 在分类下面添加 3 个实用的按钮
+Tab_Function:Button({
+    Title = "🛡️ 开启无敌模式",
     Desc = "无视所有灾难伤害",
     Callback = function()
         local char = game.Players.LocalPlayer.Character
         if char and char:FindFirstChild("Humanoid") then
             char.Humanoid.MaxHealth = math.huge
             char.Humanoid.Health = math.huge
-            WindUI:Notify({
-                Title = "BI脚本",
-                Content = "无敌模式已开启！",
-                Duration = 2
-            })
+            Window:Notify({ Title = "BI脚本", Content = "无敌模式已开启！", Duration = 2 })
         end
     end
 })
 
--- 3. 添加功能按钮：传送高空
-Tab_Disaster:Button({
-    Title = "紧急传送高空",
+Tab_Function:Button({
+    Title = "✈️ 紧急传送高空",
     Desc = "避开地震和海啸",
     Callback = function()
         local char = game.Players.LocalPlayer.Character
         if char and char:FindFirstChild("HumanoidRootPart") then
             char.HumanoidRootPart.CFrame = CFrame.new(0, 300, 0)
-            WindUI:Notify({
-                Title = "BI脚本",
-                Content = "已传送至安全高空！",
-                Duration = 2
-            })
+            Window:Notify({ Title = "BI脚本", Content = "已传送至安全高空！", Duration = 2 })
         end
     end
 })
 
--- 4. 添加功能按钮：瞬间回血
-Tab_Disaster:Button({
-    Title = "瞬间回满血量",
+Tab_Function:Button({
+    Title = "❤️ 瞬间回满血量",
     Desc = "立刻补满生命值",
     Callback = function()
         local char = game.Players.LocalPlayer.Character
         if char and char:FindFirstChild("Humanoid") then
             char.Humanoid.Health = char.Humanoid.MaxHealth
-            WindUI:Notify({
-                Title = "BI脚本",
-                Content = "血量已回满！",
-                Duration = 2
-            })
+            Window:Notify({ Title = "BI脚本", Content = "血量已回满！", Duration = 2 })
         end
     end
+})
+
+-- 3. 创建分类：公告
+local Tab_Notice = Window:Tab({ Title = "公告", Icon = "bell" })
+Tab_Notice:Paragraph({
+    Title = "BI 脚本公告",
+    Desc = "永久免费！永不跑路！\n交流群：1081045774",
+    Image = "https://c-ssl.duitang.com/uploads/blog/202310/21/oVS4gnBVIg4A1yJ.jpg"
 })
 -- Anti-AFK
 -- ============================================

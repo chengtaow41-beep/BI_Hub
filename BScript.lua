@@ -1,9 +1,13 @@
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/refs/heads/main/dist/main.lua"))()
 local PAGES={
   currentPage="公告"
+--这里你可以自己定义
   container=nil,
+--页面容器，所有页面放这里
   pages={},
+--储存所有页面创建函数
   callbacks={}
+--页面存在周期回调
 }
 
 -- ============================================

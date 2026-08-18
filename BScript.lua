@@ -100,15 +100,7 @@ end)
 -- ============================================
 -- 创建功能分类标签页
 -- ============================================
-local Tab_Notice = Window:Tab({ Title = "公告", Icon = "bell" })
-local Tab_Player = Window:Tab({ Title = "玩家功能", Icon = "zap" })
-})
--- 在公告里加字
-Tab_Notice:Paragraph({
-    Title = "BI脚本",
-    Desc = "永久免费！永不跑路！\n群号: 1081045774",
-    Image = "https://c-ssl.duitang.com/uploads/blog/202310/21/oVS4gnBVIg4A1yJ.jpg"
-}) ============================================
+ ============================================
 -- Anti-AFK
 -- ============================================
 local VirtualUser = game:GetService("VirtualUser")

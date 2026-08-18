@@ -100,14 +100,14 @@ end)
 --====================================
 -- 创建Tab分类标签页
 -- ===================================
-local MainTab = Window:Tab({
-     Title = "公告",
-     Icon = "megaphone"
- })
-MainTab:Section({
-     Title = "风脚本",
-     Desc = "永久免费\n公益脚本禁止倒卖，认准风脚本"
- })
+local AnnounceTab = Window:Tab({
+    Title = "公告",
+    Icon = "megaphone"
+})
+AnnounceTab:Section({
+    Title = "风脚本",
+    Desc = "永久免费\n公益脚本禁止倒卖，认准风脚本"
+})
  local MiscTab = Window:Tab({
      Title = "通用",
      Icon = "settings"

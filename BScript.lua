@@ -100,7 +100,18 @@ end)
 --====================================
 -- 创建Tab分类标签页
 -- ===================================
-
+local MainTab = Window:Tab({
+     Title = "公告",
+     Icon = "home"
+ })
+ local MiscTab = Window:Tab({
+     Title = "通用",
+     Icon = "settings"
+ })
+ local InfoTab = Window:Tab({
+     Title = "服务器功能",
+     Icon = "info"
+ })
   
 -- Anti-AFK
 -- ============================================

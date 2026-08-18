@@ -108,6 +108,18 @@ AnnounceTab:Section({
     Title = "风脚本",
     Desc = "永久免费\n公益脚本禁止倒卖，认准风脚本"
 })
+AnnounceTab:Button({
+     Title = "风脚本主群",
+     Desc = "12345678",
+     Callback = function()
+         setclipboard("12345678")
+         WindUI:Notify({
+             Title = "已复制QQ群号",
+             Content = "直接粘贴即可加群",
+             Duration = 2
+         })
+     end
+})
 
  local MiscTab = Window:Tab({
      Title = "通用",

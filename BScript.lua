@@ -1,4 +1,10 @@
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/refs/heads/main/dist/main.lua"))()
+local PAGES={
+  currentPage="公告"
+  container=nil,
+  pages={},
+  callbacks={}
+}
 
 -- ============================================
 -- 品牌配置（改这 4 行就行）
@@ -98,14 +104,9 @@ task.spawn(function()
 end)
 
 --====================================
--- 创建功能分类标签页
+-- 创建Tab分类标签页
 -- ===================================
-local PAGES={
-  currentPage="公告"
-  container=nil,
-  pages={},
-  callbacks={}
-}
+
   
 -- Anti-AFK
 -- ============================================

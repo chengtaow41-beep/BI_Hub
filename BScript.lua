@@ -186,8 +186,7 @@ local function ToggleFly()
         end
         game:GetService("StarterGui"):SetCore("SendNotification", {Title="BI脚本", Text="飞行关闭", Duration=2})
     end
-  end
-end
+ end
  
 -- Anti-AFK
 -- ============================================

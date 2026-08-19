@@ -200,5 +200,3 @@ end)
 
 _G._LCF_WindUI = WindUI
 _G._LCF_TmplWin = Window
-
-

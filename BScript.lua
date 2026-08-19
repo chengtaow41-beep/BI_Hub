@@ -140,7 +140,7 @@ MiscTab:Toggle({
 MiscTab:Input({
     Title = "速度数值",
     Default = "16",
-    Placeholder = "输入 16 到 400 的数字...",
+    Placeholder = "风脚本欢迎您使用/n目前是公测版",
     Callback = function(text)
         local num = tonumber(text)
         if num and num >= 16 and num <= 400 then

@@ -126,7 +126,6 @@ AnnounceTab:Button({
      Icon = "settings"
  })
 local TargetWalkSpeed = 16
-local OriginalWalkSpeed = 16
 local speedToggleOn = false
 
 MiscTab:Slider({
@@ -136,15 +135,13 @@ MiscTab:Slider({
     Default = 16,
     Callback = function(value)
         TargetWalkSpeed = value
-        -- 只要在游戏里，立刻修改速度上限 (不管开关开没开)
-        local char = game.Players.LocalPlayer.Character
-        if char then
-            local hum = char:FindFirstChildOfClass("Humanoid")
-            if hum then
-                hum.WalkSpeed = TargetWalkSpeed
+        Window:Notify({ Title = "BI脚本", Content = "当前设定速度: "..TargetWalkSpeed, Duration = 1 })
+        if speedToggleOn then
+            local char = game.Players.LocalPlayer.Character
+            if char and char:FindFirstChildOfClass("Humanoid") then
+                char:FindFirstChildOfClass("Humanoid").WalkSpeed = TargetWalkSpeed
             end
         end
-        Window:Notify({ Title = "BI脚本", Content = "速度已设为: "..TargetWalkSpeed, Duration = 2 })
     end
 })
 
@@ -154,40 +151,40 @@ MiscTab:Toggle({
     Callback = function(v)
         speedToggleOn = v
         local char = game.Players.LocalPlayer.Character
-        if not char then return end
-        local hum = char:FindFirstChildOfClass("Humanoid")
-        if not hum then return end
-        if v then
-            OriginalWalkSpeed = hum.WalkSpeed
-            hum.WalkSpeed = TargetWalkSpeed
-            Window:Notify({ Title = "风脚本", Content = "加速已开启！", Duration = 2 })
-        else
-            hum.WalkSpeed = OriginalWalkSpeed
-            Window:Notify({ Title = "风脚本", Content = "速度已恢复", Duration = 2 })
+        if char and char:FindFirstChildOfClass("Humanoid") then
+            local hum = char:FindFirstChildOfClass("Humanoid")
+            if v then
+                hum.WalkSpeed = TargetWalkSpeed
+                Window:Notify({ Title = "BI脚本", Content = "加速已开启！当前速度: "..TargetWalkSpeed, Duration = 2 })
+            else
+                hum.WalkSpeed = 16
+                Window:Notify({ Title = "BI脚本", Content = "速度已恢复默认", Duration = 2 })
+            end
         end
     end
 })
+
+game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
+    task.wait(0.5)
+    if speedToggleOn then
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if hum then
+            hum.WalkSpeed = TargetWalkSpeed
+        end
+    end
+end)
 
 task.spawn(function()
     while task.wait(0.5) do
         if speedToggleOn then
             local char = game.Players.LocalPlayer.Character
-            if char then
+            if char and char:FindFirstChildOfClass("Humanoid") then
                 local hum = char:FindFirstChildOfClass("Humanoid")
-                if hum and hum.WalkSpeed ~= TargetWalkSpeed then
+                if hum.WalkSpeed ~= TargetWalkSpeed then
                     hum.WalkSpeed = TargetWalkSpeed
                 end
             end
         end
-    end
-end)
-
-game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
-    task.wait(0.5)
-    if speedToggleOn then
-        local hum = char:WaitForChild("Humanoid")
-        OriginalWalkSpeed = hum.WalkSpeed
-        hum.WalkSpeed = TargetWalkSpeed
     end
 end)
 

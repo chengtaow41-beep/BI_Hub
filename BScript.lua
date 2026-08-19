@@ -126,52 +126,76 @@ AnnounceTab:Button({
      Icon = "settings"
  })
 local TargetWalkSpeed = 16
- local OriginalWalkSpeed = 16
- local speedToggleOn = false
- MiscTab:Slider({
-     Title = "速度数值",
-     Min = 16,
-     Max = 200,
-     Default = 16,
-     Callback = function(value)
-         TargetWalkSpeed = value
-         local LocalPlayer = game.Players.LocalPlayer
-         local char = LocalPlayer.Character
-         if speedToggleOn and char then
-             local hum = char:FindFirstChildOfClass("Humanoid")
-             if hum then
-                 hum.WalkSpeed = TargetWalkSpeed
-             end
-         end
-     end
- })
- MiscTab:Toggle({
-     Title = "开启速度修改",
-     Value = false,
-     Callback = function(v)
-         speedToggleOn = v
-         local LocalPlayer = game.Players.LocalPlayer
-         local char = LocalPlayer.Character
-         if not char then return end
-         local hum = char:FindFirstChildOfClass("Humanoid")
-         if not hum then return end
-         if v then
-             OriginalWalkSpeed = hum.WalkSpeed
-             hum.WalkSpeed = TargetWalkSpeed
-         else
-             hum.WalkSpeed = OriginalWalkSpeed
-         end
-     end
- })
- -- 重生自动重应用速度
- game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
-     task.wait(0.1)
-     local hum = char:WaitForChild("Humanoid")
-     if speedToggleOn then
-         OriginalWalkSpeed = hum.WalkSpeed
-         hum.WalkSpeed = TargetWalkSpeed
-     end
- end)
+local OriginalWalkSpeed = 16
+local speedToggleOn = false
+
+MiscTab:Slider({
+    Title = "速度数值",
+    Min = 16,
+    Max = 200,
+    Default = 16,
+    Callback = function(value)
+        TargetWalkSpeed = value
+        if speedToggleOn then
+            local char = game.Players.LocalPlayer.Character
+            if char then
+                local hum = char:FindFirstChildOfClass("Humanoid")
+                if hum then hum.WalkSpeed = TargetWalkSpeed end
+            end
+        end
+        Window:Notify({ Title = "风脚本", Content = "当前设定速度: "..TargetWalkSpeed, Duration = 1 })
+    end
+})
+
+MiscTab:Toggle({
+    Title = "开启速度修改",
+    Value = false,
+    Callback = function(v)
+        speedToggleOn = v
+        local char = game.Players.LocalPlayer.Character
+        if not char then return end
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if not hum then return end
+        if v then
+            OriginalWalkSpeed = hum.WalkSpeed
+            hum.WalkSpeed = TargetWalkSpeed
+            Window:Notify({ Title = "风脚本", Content = "加速已开启！", Duration = 2 })
+        else
+            hum.WalkSpeed = OriginalWalkSpeed
+            Window:Notify({ Title = "风脚本", Content = "速度已恢复", Duration = 2 })
+        end
+    end
+})
+
+task.spawn(function()
+    while task.wait(0.5) do
+        if speedToggleOn then
+            local char = game.Players.LocalPlayer.Character
+            if char then
+                local hum = char:FindFirstChildOfClass("Humanoid")
+                if hum and hum.WalkSpeed ~= TargetWalkSpeed then
+                    hum.WalkSpeed = TargetWalkSpeed
+                end
+            end
+        end
+    end
+end)
+
+game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
+    task.wait(0.5)
+    if speedToggleOn then
+        local hum = char:WaitForChild("Humanoid")
+        OriginalWalkSpeed = hum.WalkSpeed
+        hum.WalkSpeed = TargetWalkSpeed
+    end
+end)
+
+local VirtualUser = game:GetService("VirtualUser")
+game.Players.LocalPlayer.Idled:Connect(function()
+    VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+    task.wait(1)
+    VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+end)
  local InfoTab = Window:Tab({
      Title = "服务器功能",
      Icon = "info"

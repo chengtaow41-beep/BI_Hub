@@ -1,9 +1,6 @@
-
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/refs/heads/main/dist/main.lua"))()
 
--- ============================================
--- 品牌配置（改这 4 行就行）
--- --==========================================
+
 local BRAND = {
     name    = "风脚本",
     version = "v1.0.0.0",
@@ -14,9 +11,7 @@ local BRAND = {
     accent  = "#FFAC9B",
 }
 
--- --==========================================
--- 主窗口
--- --============================================
+
 local Window = WindUI:CreateWindow({
     Title       = BRAND.name,
     Icon        = BRAND.icon,
@@ -49,9 +44,7 @@ local Window = WindUI:CreateWindow({
     },
 })
 
--- ============================================
--- 顶部主题切换按钮
--- ============================================
+
 Window:CreateTopbarButton("ThemeToggle", "moon", function()
     local current = WindUI:GetCurrentTheme()
     if current == "Light" then
@@ -63,9 +56,7 @@ Window:CreateTopbarButton("ThemeToggle", "moon", function()
     end
 end, 990)
 
--- ============================================
--- 屏幕浮动打开按钮（小球）
--- ============================================
+
 Window:EditOpenButton({
     Title           = BRAND.name,
     Icon            = BRAND.icon,
@@ -79,9 +70,7 @@ Window:EditOpenButton({
     Draggable = true,
 })
 
--- ============================================
--- 角标标签
--- ============================================
+
 Window:Tag({
     Title = BRAND.name .. " " .. BRAND.version,
     Color = Color3.fromHex(BRAND.accent)
@@ -200,8 +189,7 @@ end)
      Icon = "info"
  })
   
--- Anti-AFK
--- ============================================
+
 local VirtualUser = game:GetService("VirtualUser")
 game.Players.LocalPlayer.Idled:Connect(function()
     VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
@@ -209,9 +197,8 @@ game.Players.LocalPlayer.Idled:Connect(function()
     VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
 end)
 
--- 暴露全局
+
 _G._LCF_WindUI = WindUI
 _G._LCF_TmplWin = Window
 
 
-print("[" .. BRAND.name .. "] UI 纯净模板已加载 ✅")

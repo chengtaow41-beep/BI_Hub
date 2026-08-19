@@ -145,7 +145,7 @@ local TargetWalkSpeed = 16
          end
      end
  })
- TabAttr:Toggle({
+ MiscTab:Toggle({
      Title = "开启速度修改",
      Value = false,
      Callback = function(v)

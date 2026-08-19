@@ -136,14 +136,15 @@ MiscTab:Slider({
     Default = 16,
     Callback = function(value)
         TargetWalkSpeed = value
-        if speedToggleOn then
-            local char = game.Players.LocalPlayer.Character
-            if char then
-                local hum = char:FindFirstChildOfClass("Humanoid")
-                if hum then hum.WalkSpeed = TargetWalkSpeed end
+        -- 只要在游戏里，立刻修改速度上限 (不管开关开没开)
+        local char = game.Players.LocalPlayer.Character
+        if char then
+            local hum = char:FindFirstChildOfClass("Humanoid")
+            if hum then
+                hum.WalkSpeed = TargetWalkSpeed
             end
         end
-        Window:Notify({ Title = "风脚本", Content = "当前设定速度: "..TargetWalkSpeed, Duration = 1 })
+        Window:Notify({ Title = "BI脚本", Content = "速度已设为: "..TargetWalkSpeed, Duration = 2 })
     end
 })
 

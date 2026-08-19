@@ -192,6 +192,24 @@ end)
      Title = "服务器功能",
      Icon = "info"
  })
+local ScriptTab = Window:Tab({
+    Title = "脚本库",
+    Icon = "box"
+})
+
+-- 添加执行按钮
+ScriptTab:Button({
+    Title = "执行 Homelander 脚本",
+    Desc = "点击加载并运行外部脚本",
+    Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/giobolqvi1/homelander-by-GioBolqv1/refs/heads/main/homelander.lua'))()
+        WindUI:Notify({
+            Title = "风脚本",
+            Content = "已尝试加载外部脚本！",
+            Duration = 2
+        })
+    end
+})
   
 --AFK
 local VirtualUser = game:GetService("VirtualUser")

@@ -140,7 +140,7 @@ MiscTab:Toggle({
 MiscTab:Input({
     Title = "速度数值",
     Default = "16",
-    Placeholder = "风脚本欢迎您使用/n目前是公测版",
+    Placeholder = "从16~400的修改",
     Callback = function(text)
         local num = tonumber(text)
         if num and num >= 16 and num <= 400 then
@@ -153,7 +153,7 @@ MiscTab:Input({
             end
             WindUI:Notify({ Title = "风脚本", Content = "速度已设定为: "..num, Duration = 2 })
         else
-            WindUI:Notify({ Title = "风脚本", Content = "请输入 16 ~ 400 之间的数字", Duration = 2 })
+            WindUI:Notify({ Title = "风脚本", Content = "欢迎使用风脚本，已加载成功！", Duration = 2 })
         end
     end
 })

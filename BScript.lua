@@ -128,7 +128,7 @@ AnnounceTab:Button({
 local TargetWalkSpeed = 16
  local OriginalWalkSpeed = 16
  local speedToggleOn = false
- TabAttr:Slider({
+ MiscTab:Slider({
      Title = "速度数值",
      Min = 16,
      Max = 200,

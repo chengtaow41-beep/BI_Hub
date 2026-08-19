@@ -118,23 +118,6 @@ AnnounceTab:Button({
 local TargetWalkSpeed = 16
 local speedToggleOn = false
 
-MiscTab:Slider({
-    Title = "速度数值",
-    Min = 16,
-    Max = 200,
-    Default = 16,
-    Callback = function(value)
-        TargetWalkSpeed = value
-        Window:Notify({ Title = "BI脚本", Content = "当前设定速度: "..TargetWalkSpeed, Duration = 1 })
-        if speedToggleOn then
-            local char = game.Players.LocalPlayer.Character
-            if char and char:FindFirstChildOfClass("Humanoid") then
-                char:FindFirstChildOfClass("Humanoid").WalkSpeed = TargetWalkSpeed
-            end
-        end
-    end
-})
-
 MiscTab:Toggle({
     Title = "开启速度修改",
     Value = false,
@@ -145,24 +128,35 @@ MiscTab:Toggle({
             local hum = char:FindFirstChildOfClass("Humanoid")
             if v then
                 hum.WalkSpeed = TargetWalkSpeed
-                Window:Notify({ Title = "BI脚本", Content = "加速已开启！当前速度: "..TargetWalkSpeed, Duration = 2 })
+                WindUI:Notify({ Title = "风脚本", Content = "加速已开启！", Duration = 2 })
             else
                 hum.WalkSpeed = 16
-                Window:Notify({ Title = "BI脚本", Content = "速度已恢复默认", Duration = 2 })
+                WindUI:Notify({ Title = "风脚本", Content = "速度已恢复默认", Duration = 2 })
             end
         end
     end
 })
 
-game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
-    task.wait(0.5)
-    if speedToggleOn then
-        local hum = char:FindFirstChildOfClass("Humanoid")
-        if hum then
-            hum.WalkSpeed = TargetWalkSpeed
+MiscTab:Input({
+    Title = "速度数值",
+    Default = "16",
+    Placeholder = "输入 16 到 400 的数字...",
+    Callback = function(text)
+        local num = tonumber(text)
+        if num and num >= 16 and num <= 400 then
+            TargetWalkSpeed = num
+            if speedToggleOn then
+                local char = game.Players.LocalPlayer.Character
+                if char and char:FindFirstChildOfClass("Humanoid") then
+                    char:FindFirstChildOfClass("Humanoid").WalkSpeed = TargetWalkSpeed
+                end
+            end
+            WindUI:Notify({ Title = "风脚本", Content = "速度已设定为: "..num, Duration = 2 })
+        else
+            WindUI:Notify({ Title = "风脚本", Content = "请输入 16 ~ 400 之间的数字", Duration = 2 })
         end
     end
-end)
+})
 
 task.spawn(function()
     while task.wait(0.5) do
@@ -178,6 +172,16 @@ task.spawn(function()
     end
 end)
 
+game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
+    task.wait(0.5)
+    if speedToggleOn then
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if hum then
+            hum.WalkSpeed = TargetWalkSpeed
+        end
+    end
+end)
+
 local VirtualUser = game:GetService("VirtualUser")
 game.Players.LocalPlayer.Idled:Connect(function()
     VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
@@ -189,7 +193,7 @@ end)
      Icon = "info"
  })
   
-
+--AFK
 local VirtualUser = game:GetService("VirtualUser")
 game.Players.LocalPlayer.Idled:Connect(function()
     VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)

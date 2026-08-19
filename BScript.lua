@@ -110,12 +110,12 @@ AnnounceTab:Section({
 })
 AnnounceTab:Button({
      Title = "风脚本主群",
-     Desc = "12345678",
+     Desc = "群聊暂时不定",
      Callback = function()
-         setclipboard("12345678")
+         setclipboard("待定")
          WindUI:Notify({
-             Title = "已复制QQ群号",
-             Content = "直接粘贴即可加群",
+             Title = "已复制群号",
+             Content = "待定",
              Duration = 2
          })
      end

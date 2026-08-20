@@ -202,7 +202,7 @@ ScriptTab:Button({
     Title = "执行 Homelander 脚本",
     Desc = "点击加载并运行外部脚本",
     Callback = function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/giobolqvi1/homelander-by-GioBolqv1/refs/heads/main/homelander.lua'))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/giobolqv1/homelander-by-GioBolqv1-/main/homelander.lua"))()
         WindUI:Notify({
             Title = "风脚本",
             Content = "已尝试加载外部脚本！",

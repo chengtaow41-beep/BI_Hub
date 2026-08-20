@@ -199,13 +199,25 @@ local ScriptTab = Window:Tab({
 
 -- 添加执行按钮
 ScriptTab:Button({
-    Title = "执行 祖国八 脚本",
+    Title = "执行 祖国人 脚本",
     Desc = "点击加载并运行外部脚本",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/giobolqv1/homelander-by-GioBolqv1-/main/homelander.lua"))()
         WindUI:Notify({
             Title = "风脚本",
             Content = "已尝试加载外部脚本！",
+            Duration = 2
+        })
+    end
+})
+ScriptTab:Button({
+    Title = "无敌少侠",
+    Desc = "点击加载无敌少侠",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/giobolqv1/invincible-characters-animations-by-GioBolqv1-/main/universal.lua"))()
+        WindUI:Notify({
+            Title = "风脚本",
+            Content = "已尝试加载无敌少侠脚本",
             Duration = 2
         })
     end

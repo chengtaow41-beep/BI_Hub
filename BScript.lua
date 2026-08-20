@@ -199,7 +199,7 @@ local ScriptTab = Window:Tab({
 
 -- 添加执行按钮
 ScriptTab:Button({
-    Title = "执行 Homelander 脚本",
+    Title = "执行 祖国八 脚本",
     Desc = "点击加载并运行外部脚本",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/giobolqv1/homelander-by-GioBolqv1-/main/homelander.lua"))()

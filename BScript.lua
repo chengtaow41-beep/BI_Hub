@@ -214,7 +214,7 @@ ScriptTab:Button({
     Title = "无敌少侠",
     Desc = "点击加载无敌少侠",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/giobolqv1/invincible-characters-animations-by-GioBolqv1-/main/universal.lua"))()
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/giobolqv1/invincible-characters-animations-by-GioBolqv1-/refs/heads/main/universal.lua"))()
         WindUI:Notify({
             Title = "风脚本",
             Content = "已尝试加载无敌少侠脚本",
